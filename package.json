@@ -1,0 +1,64 @@
+{
+  "name": "@enclave/auth-sdk",
+  "version": "0.1.0",
+  "description": "Post-quantum client/domain cryptography for Enclave Auth",
+  "license": "AGPL-3.0-or-later",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./init": {
+      "types": "./dist/init.d.ts",
+      "import": "./dist/init.js"
+    },
+    "./identity": {
+      "types": "./dist/identity.d.ts",
+      "import": "./dist/identity.js"
+    },
+    "./challenge": {
+      "types": "./dist/challenge.d.ts",
+      "import": "./dist/challenge.js"
+    },
+    "./session-token": {
+      "types": "./dist/session-token.d.ts",
+      "import": "./dist/session-token.js"
+    },
+    "./session-verify": {
+      "types": "./dist/session-verify.d.ts",
+      "import": "./dist/session-verify.js"
+    },
+    "./migration": {
+      "types": "./dist/migration/orchestrator.d.ts",
+      "import": "./dist/migration/orchestrator.js"
+    },
+    "./migration/types": {
+      "types": "./dist/migration/types.d.ts",
+      "import": "./dist/migration/types.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@enclave/pqc-primitives": "file:../../Enclave-Inc/enclave-pqc-primitives"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Enclave-Auth/enclave-auth-sdk"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
