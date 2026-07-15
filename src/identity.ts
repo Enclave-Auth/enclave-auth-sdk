@@ -1,10 +1,17 @@
 /**
- * Long-term device identity (ML-DSA-87).
+ * ML-DSA-87 identity key material (account or service).
+ *
+ * End-user accounts: generate once via `createAccount` (AMK-protected).
+ * There is one signing keypair per account — not one per device. Devices that
+ * can unlock the AMK recover the same `secretKeySeed`.
+ *
+ * This module still exposes {@link generateIdentityKeyPair} as the low-level
+ * generator (also used for auth-service session-token keys). Prefer
+ * `createAccount` for user registration.
  *
  * Public API always exposes the 32-byte seed form as `secretKeySeed`. The seed
- * NEVER leaves the client device (or, for service identities, the holding
- * service). It is never transmitted to enclave-auth-api as a credential blob
- * for end-users.
+ * is never transmitted to enclave-auth-api as a plaintext credential blob for
+ * end-users — only as ciphertext under the AMK (`WrappedIdentityKey`).
  *
  * Current `@enclave/pqc-primitives` `sigSign` / `sigSignWithContext` accept the
  * seed form directly — no expand-before-sign is required.
@@ -19,12 +26,15 @@ import { base64UrlToBytes, bytesToBase64Url } from "./encoding.js";
 
 export type IdentityKeyPair = {
   publicKey: Uint8Array;
-  /** Preferred ML-DSA-87 seed (32 bytes). Never transmit off-device. */
+  /** Preferred ML-DSA-87 seed (32 bytes). Never transmit in plaintext. */
   secretKeySeed: Uint8Array;
 };
 
 /**
- * Generate a fresh ML-DSA-87 identity keypair.
+ * Generate a fresh ML-DSA-87 identity keypair (low-level).
+ *
+ * For user accounts, call `createAccount` instead so the seed is wrapped under
+ * an AMK. This remains public for auth-service keys and tests.
  *
  * Propagates `PairwiseConsistencyFailureError` from primitives (`err.name` /
  * `isPairwiseConsistencyFailure`) without wrapping.

@@ -1,11 +1,13 @@
 /**
  * Login challenge sign / verify (isomorphic).
  *
- * Client signs with `secretKeySeed`; server verifies with the registered
- * public key only. Serialization is canonical JSON with fixed key order.
+ * Client signs with the account `secretKeySeed` (recovered after AMK unlock);
+ * server verifies with the registered account public key only. Serialization
+ * is canonical JSON with fixed key order.
  *
  * Primitives accept the 32-byte seed form for `sigSignWithContext` — seeds are
- * passed through without expansion.
+ * passed through without expansion. This module does not care how the seed was
+ * obtained (AMK unlock vs. service key).
  */
 
 import {
@@ -73,7 +75,7 @@ function assertSeed(secretKeySeed: Uint8Array): void {
 }
 
 /**
- * Sign a login challenge with the device identity seed.
+ * Sign a login challenge with an account (or service) identity seed.
  *
  * Returns base64url signature. Call {@link getLastUsageRecord} afterwards for CBOM.
  */

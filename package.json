@@ -38,6 +38,22 @@
     "./migration/types": {
       "types": "./dist/migration/types.d.ts",
       "import": "./dist/migration/types.js"
+    },
+    "./amk": {
+      "types": "./dist/amk/index.d.ts",
+      "import": "./dist/amk/index.js"
+    },
+    "./account": {
+      "types": "./dist/account/index.d.ts",
+      "import": "./dist/account/index.js"
+    },
+    "./password-policy": {
+      "types": "./dist/password-policy.d.ts",
+      "import": "./dist/password-policy.js"
+    },
+    "./pin-policy": {
+      "types": "./dist/pin-policy.d.ts",
+      "import": "./dist/pin-policy.js"
     }
   },
   "scripts": {
@@ -47,7 +63,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@enclave/pqc-primitives": "file:../../Enclave-Inc/enclave-pqc-primitives"
+    "@enclave/pqc-primitives": "file:../../Enclave-Inc/enclave-pqc-primitives",
+    "@scure/bip39": "^1.6.0"
   },
   "repository": {
     "type": "git",
