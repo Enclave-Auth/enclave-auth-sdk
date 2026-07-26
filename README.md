@@ -15,17 +15,26 @@ ML-KEM-1024 / ML-DSA-87). There is no suite-selection parameter. User accounts
 use one ML-DSA-87 identity per account, wrapped under an Account Master Key
 (`createAccount` / account unlock) — not a fresh keypair per device.
 
-## Setup
+## Install
 
 ```bash
-# From Enclave-Inc/enclave-pqc-primitives first if needed:
-npm run build
+npm install @enclave/auth-sdk
+```
 
-cd ../Enclave-Auth/enclave-auth-sdk
+Depends on `@enclave/pqc-primitives` (Apache-2.0), installed automatically.
+
+For local development against sibling repos before packages are on npm:
+
+```bash
+cd ../Enclave-Inc/enclave-pqc-primitives && npm run build
+cd ../../Enclave-Auth/enclave-auth-sdk
 npm install
+npm install ../../Enclave-Inc/enclave-pqc-primitives
 npm run build
 npm test
 ```
+
+## Setup (from source)
 
 ## Usage
 
@@ -65,3 +74,9 @@ a **verification** digest the API can check, and a **wrap** key used only
 client-side to unwrap the existing AMK. See `registerPinMethod` /
 `setPinMethod`. Forgot-password never needs an active session — only email +
 PIN against stored blobs.
+
+## License
+
+**AGPL-3.0-or-later** — see [`LICENSE`](./LICENSE). A separate commercial
+license is available for proprietary products that cannot comply with AGPL
+network-copyleft requirements. Contact Enclave for commercial terms.
