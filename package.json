@@ -73,7 +73,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@enclave-technologies/pqc-primitives": "file:../../Enclave-Inc/enclave-pqc-primitives",
+    "@enclave-technologies/pqc-primitives": "^0.1.0",
     "@scure/bip39": "^1.6.0"
   },
   "repository": {
