@@ -10,7 +10,7 @@
  *
  * Breach lookup uses SHA-1 only as the **public key into the HIBP range API**
  * (k-anonymity). It is not used for password storage or key derivation. Do
- * **not** add SHA-1 to `@enclave/pqc-primitives` for this — that crate is for
+ * **not** add SHA-1 to `@enclave-technologies/pqc-primitives` for this — that crate is for
  * PQC / AEAD / Argon2id / labeled KDF, not breach-list lookup hashes. We use
  * `globalThis.crypto.subtle.digest("SHA-1", …)` (Web Crypto), available in
  * modern browsers, Deno, and Node ≥18 with `webcrypto`.

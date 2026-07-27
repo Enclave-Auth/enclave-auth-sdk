@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("@enclave/pqc-primitives", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@enclave/pqc-primitives")>();
+vi.mock("@enclave-technologies/pqc-primitives", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@enclave-technologies/pqc-primitives")>();
   return {
     ...actual,
     runSelfTests: vi.fn(),
   };
 });
 
-import { runSelfTests } from "@enclave/pqc-primitives";
+import { runSelfTests } from "@enclave-technologies/pqc-primitives";
 import {
   initCrypto,
   isSelfTestFailure,

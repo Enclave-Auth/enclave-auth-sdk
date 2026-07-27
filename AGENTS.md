@@ -4,7 +4,7 @@ AGPL client-side crypto / domain SDK for **Enclave Auth**.
 
 ## Rules
 
-1. Category 5 crypto only via `@enclave/pqc-primitives`. Exception: BIP39
+1. Category 5 crypto only via `@enclave-technologies/pqc-primitives`. Exception: BIP39
    mnemonic encode/decode uses audited `@scure/bip39` (wordlist + checksum) —
    do not hand-roll BIP39.
 2. Category 5 exclusively (ML-KEM-1024 / ML-DSA-87). No suite parameter.
@@ -30,4 +30,4 @@ npm run build
 npm test
 ```
 
-Build sibling `@enclave/pqc-primitives` (WASM) before linking if `dist/` is missing.
+Build sibling `@enclave-technologies/pqc-primitives` (WASM) before linking if `dist/` is missing.

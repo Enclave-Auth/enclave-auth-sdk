@@ -1,7 +1,7 @@
 /**
  * Typed errors for session-token verification.
  * Primitives PCT / CAST failures keep their `err.name` from
- * `@enclave/pqc-primitives` — do not wrap those away.
+ * `@enclave-technologies/pqc-primitives` — do not wrap those away.
  */
 
 /** Token string was not `payload.signature` base64url parts. */

@@ -10,7 +10,7 @@ import {
   PWHASH,
   generateSalt,
   pwhashDeriveKey,
-} from "@enclave/pqc-primitives";
+} from "@enclave-technologies/pqc-primitives";
 
 import { base64UrlToBytes, bytesToBase64Url, utf8Encode } from "../encoding.js";
 import { wrapAmk, unwrapAmk, AMK_BYTES } from "./core.js";

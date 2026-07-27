@@ -2,7 +2,7 @@
  * Product-API session verification helpers.
  *
  * Other product backends (sign-api, verify-api, messaging-api, …) should import
- * {@link verifySessionToken} from `@enclave/auth-sdk` (or this module's
+ * {@link verifySessionToken} from `@enclave-technologies/auth-sdk` (or this module's
  * re-exports) rather than re-implementing session-token parsing.
  *
  * **Do not reimplement** — copy this file into a product API's `_shared/` only

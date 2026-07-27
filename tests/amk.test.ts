@@ -5,7 +5,7 @@ import {
   generateSalt,
   labeledKdf32,
   pwhashDeriveKey,
-} from "@enclave/pqc-primitives";
+} from "@enclave-technologies/pqc-primitives";
 
 import {
   UnlockFailedError,

@@ -2,14 +2,14 @@
  * Recovery-key unlock method for the Account Master Key.
  *
  * The recovery key is high-entropy (32 random bytes). Unlike passwords, it
- * does not need Argon2id — a labeled KDF from `@enclave/pqc-primitives` is
+ * does not need Argon2id — a labeled KDF from `@enclave-technologies/pqc-primitives` is
  * enough. Display encoding is BIP39 (24 words for 256-bit entropy + checksum)
  * via audited `@scure/bip39` — do not hand-roll the wordlist or checksum.
  */
 
 import { entropyToMnemonic, mnemonicToEntropy } from "@scure/bip39";
 import { wordlist } from "@scure/bip39/wordlists/english";
-import { labeledKdf32 } from "@enclave/pqc-primitives";
+import { labeledKdf32 } from "@enclave-technologies/pqc-primitives";
 
 import { wrapAmk, unwrapAmk, AMK_BYTES, randomBytes } from "./core.js";
 import { UnlockFailedError } from "./errors.js";

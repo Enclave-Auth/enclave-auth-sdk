@@ -10,7 +10,7 @@ import {
   AEAD,
   aeadDecrypt,
   aeadEncrypt,
-} from "@enclave/pqc-primitives";
+} from "@enclave-technologies/pqc-primitives";
 
 import { base64UrlToBytes, bytesToBase64Url, utf8Encode } from "../encoding.js";
 import { UnlockFailedError } from "./errors.js";

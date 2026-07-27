@@ -1,10 +1,10 @@
 /**
- * @enclave/auth-sdk — Enclave Auth crypto / domain SDK (AGPL).
+ * @enclave-technologies/auth-sdk — Enclave Auth crypto / domain SDK (AGPL).
  *
- * Category 5 only via `@enclave/pqc-primitives`. No suite parameter.
+ * Category 5 only via `@enclave-technologies/pqc-primitives`. No suite parameter.
  *
  * User accounts: AMK-protected identity via `createAccount` / account unlock.
- * Low-level AMK wraps remain on `@enclave/auth-sdk/amk`.
+ * Low-level AMK wraps remain on `@enclave-technologies/auth-sdk/amk`.
  */
 
 export { initCrypto } from "./init.js";

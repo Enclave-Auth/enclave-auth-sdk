@@ -1,4 +1,4 @@
-# @enclave/auth-sdk
+# @enclave-technologies/auth-sdk
 
 AGPL-3.0-or-later client/domain cryptography for **Enclave Auth**. Owns
 AMK-protected account identity, login challenge sign/verify, PIN recovery
@@ -6,11 +6,11 @@ crypto, and session-token mint/verify shared with `enclave-auth-api` and
 product APIs. No HTTP, storage, or UI.
 
 **License stack:** this package is AGPL-3.0-or-later (`LICENSE`). It depends on
-`@enclave/pqc-primitives` (Apache-2.0). The product app (`enclave-auth`) and API
+`@enclave-technologies/pqc-primitives` (Apache-2.0). The product app (`enclave-auth`) and API
 (`enclave-auth-api`) are proprietary and are **not** licensed under this
 agreement.
 
-All cryptography goes through `@enclave/pqc-primitives` (NIST Category 5 only:
+All cryptography goes through `@enclave-technologies/pqc-primitives` (NIST Category 5 only:
 ML-KEM-1024 / ML-DSA-87). There is no suite-selection parameter. User accounts
 use one ML-DSA-87 identity per account, wrapped under an Account Master Key
 (`createAccount` / account unlock) — not a fresh keypair per device.
@@ -18,10 +18,10 @@ use one ML-DSA-87 identity per account, wrapped under an Account Master Key
 ## Install
 
 ```bash
-npm install @enclave/auth-sdk
+npm install @enclave-technologies/auth-sdk
 ```
 
-Depends on `@enclave/pqc-primitives` (Apache-2.0), installed automatically.
+Depends on `@enclave-technologies/pqc-primitives` (Apache-2.0), installed automatically.
 
 For local development against sibling repos before packages are on npm:
 
@@ -45,7 +45,7 @@ import {
   unlockWithPassword,
   signChallenge,
   getLastUsageRecord,
-} from "@enclave/auth-sdk";
+} from "@enclave-technologies/auth-sdk";
 
 await initCrypto(); // CAST once at startup
 

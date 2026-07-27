@@ -2,7 +2,7 @@
  * CBOM / usage attach point for Encrypt.
  *
  * Re-exports the primitives last-usage record so SDK callers never lose the
- * algorithm metadata produced by `@enclave/pqc-primitives`.
+ * algorithm metadata produced by `@enclave-technologies/pqc-primitives`.
  */
 
 export {
@@ -10,4 +10,4 @@ export {
   isPairwiseConsistencyFailure,
   isSelfTestFailure,
   type CryptoUsageRecord,
-} from "@enclave/pqc-primitives";
+} from "@enclave-technologies/pqc-primitives";

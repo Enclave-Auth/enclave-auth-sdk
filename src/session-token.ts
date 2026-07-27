@@ -13,7 +13,7 @@ import {
   SIG,
   sigSignWithContext,
   sigVerifyWithContext,
-} from "@enclave/pqc-primitives";
+} from "@enclave-technologies/pqc-primitives";
 
 import {
   base64UrlToBytes,

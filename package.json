@@ -1,5 +1,5 @@
 {
-  "name": "@enclave/auth-sdk",
+  "name": "@enclave-technologies/auth-sdk",
   "version": "0.1.0",
   "description": "Post-quantum client/domain cryptography for Enclave Auth",
   "license": "AGPL-3.0-or-later",
@@ -73,7 +73,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@enclave/pqc-primitives": "file:../../Enclave-Inc/enclave-pqc-primitives",
+    "@enclave-technologies/pqc-primitives": "file:../../Enclave-Inc/enclave-pqc-primitives",
     "@scure/bip39": "^1.6.0"
   },
   "repository": {

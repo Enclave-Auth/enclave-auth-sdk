@@ -13,14 +13,14 @@
  * is never transmitted to enclave-auth-api as a plaintext credential blob for
  * end-users — only as ciphertext under the AMK (`WrappedIdentityKey`).
  *
- * Current `@enclave/pqc-primitives` `sigSign` / `sigSignWithContext` accept the
+ * Current `@enclave-technologies/pqc-primitives` `sigSign` / `sigSignWithContext` accept the
  * seed form directly — no expand-before-sign is required.
  */
 
 import {
   SIG,
   sigGenerateKeypair,
-} from "@enclave/pqc-primitives";
+} from "@enclave-technologies/pqc-primitives";
 
 import { base64UrlToBytes, bytesToBase64Url } from "./encoding.js";
 

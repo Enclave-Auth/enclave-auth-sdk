@@ -8,12 +8,12 @@
 import {
   isSelfTestFailure,
   runSelfTests,
-} from "@enclave/pqc-primitives";
+} from "@enclave-technologies/pqc-primitives";
 
 let initPromise: Promise<void> | undefined;
 
 /**
- * Run `@enclave/pqc-primitives` known-answer self-tests once.
+ * Run `@enclave-technologies/pqc-primitives` known-answer self-tests once.
  *
  * Throws with `err.name === "SelfTestFailureError"` (see
  * {@link isSelfTestFailure}) if CAST fails. Concurrent callers share the same

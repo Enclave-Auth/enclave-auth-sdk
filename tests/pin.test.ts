@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { AEAD, PWHASH } from "@enclave/pqc-primitives";
+import { AEAD, PWHASH } from "@enclave-technologies/pqc-primitives";
 
 import {
   PIN_VERIFY_KDF_LABEL,

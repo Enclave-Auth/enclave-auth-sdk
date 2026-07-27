@@ -5,7 +5,7 @@
  * oracle detail about which step failed.
  */
 
-import { SIG } from "@enclave/pqc-primitives";
+import { SIG } from "@enclave-technologies/pqc-primitives";
 
 import {
   UnlockFailedError,
