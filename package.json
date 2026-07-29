@@ -1,6 +1,6 @@
 {
   "name": "@enclave-technologies/auth-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Post-quantum client/domain cryptography for Enclave Auth",
   "license": "AGPL-3.0-or-later",
   "type": "module",
