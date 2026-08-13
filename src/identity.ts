@@ -1,5 +1,5 @@
 /**
- * ML-DSA-87 identity key material (account or service).
+ * ML-DSA identity key material (account or service).
  *
  * End-user accounts: generate once via `createAccount` (AMK-protected).
  * There is one signing keypair per account — not one per device. Devices that
@@ -13,44 +13,53 @@
  * is never transmitted to enclave-auth-api as a plaintext credential blob for
  * end-users — only as ciphertext under the AMK (`WrappedIdentityKey`).
  *
- * Current `@enclave-technologies/pqc-primitives` `sigSign` / `sigSignWithContext` accept the
- * seed form directly — no expand-before-sign is required.
+ * {@link PqcCategory} selects ML-DSA-87 (cat5, default) or ML-DSA-65 (cat3).
  */
 
 import {
-  SIG,
+  sig65GenerateKeypair,
   sigGenerateKeypair,
 } from "@enclave-technologies/pqc-primitives";
 
 import { base64UrlToBytes, bytesToBase64Url } from "./encoding.js";
+import {
+  DEFAULT_PQC_CATEGORY,
+  sigConstantsForCategory,
+  type PqcCategory,
+} from "./pqc-category.js";
 
 export type IdentityKeyPair = {
   publicKey: Uint8Array;
-  /** Preferred ML-DSA-87 seed (32 bytes). Never transmit in plaintext. */
+  /** Preferred ML-DSA seed (32 bytes). Never transmit in plaintext. */
   secretKeySeed: Uint8Array;
 };
 
 /**
- * Generate a fresh ML-DSA-87 identity keypair (low-level).
+ * Generate a fresh ML-DSA identity keypair (low-level).
  *
  * For user accounts, call `createAccount` instead so the seed is wrapped under
- * an AMK. This remains public for auth-service keys and tests.
+ * an AMK. Auth-service session keys remain cat5 (default).
  *
- * Propagates `PairwiseConsistencyFailureError` from primitives (`err.name` /
- * `isPairwiseConsistencyFailure`) without wrapping.
+ * Propagates `PairwiseConsistencyFailureError` from primitives without wrapping.
  *
  * CBOM: call {@link getLastUsageRecord} after this returns.
  */
-export async function generateIdentityKeyPair(): Promise<IdentityKeyPair> {
-  const kp = sigGenerateKeypair();
-  if (kp.publicKey.length !== SIG.PUBLIC_KEY_BYTES) {
+export async function generateIdentityKeyPair(
+  pqcCategory: PqcCategory = DEFAULT_PQC_CATEGORY,
+): Promise<IdentityKeyPair> {
+  const sig = sigConstantsForCategory(pqcCategory);
+  const kp = pqcCategory === "cat3"
+    ? sig65GenerateKeypair()
+    : sigGenerateKeypair();
+
+  if (kp.publicKey.length !== sig.PUBLIC_KEY_BYTES) {
     throw new Error(
-      `unexpected ML-DSA-87 public key length: ${kp.publicKey.length}`,
+      `unexpected ML-DSA public key length: ${kp.publicKey.length}`,
     );
   }
-  if (kp.secretKey.length !== SIG.SECRET_KEY_SEED_BYTES) {
+  if (kp.secretKey.length !== sig.SECRET_KEY_SEED_BYTES) {
     throw new Error(
-      `unexpected ML-DSA-87 secret seed length: ${kp.secretKey.length}`,
+      `unexpected ML-DSA secret seed length: ${kp.secretKey.length}`,
     );
   }
   return {
@@ -59,22 +68,30 @@ export async function generateIdentityKeyPair(): Promise<IdentityKeyPair> {
   };
 }
 
-/** Encode an ML-DSA-87 public key as base64url for HTTP/JSON. */
-export function encodePublicKey(publicKey: Uint8Array): string {
-  if (publicKey.length !== SIG.PUBLIC_KEY_BYTES) {
+/** Encode an ML-DSA public key as base64url for HTTP/JSON. */
+export function encodePublicKey(
+  publicKey: Uint8Array,
+  pqcCategory: PqcCategory = DEFAULT_PQC_CATEGORY,
+): string {
+  const expected = sigConstantsForCategory(pqcCategory).PUBLIC_KEY_BYTES;
+  if (publicKey.length !== expected) {
     throw new Error(
-      `public key must be ${SIG.PUBLIC_KEY_BYTES} bytes, got ${publicKey.length}`,
+      `public key must be ${expected} bytes, got ${publicKey.length}`,
     );
   }
   return bytesToBase64Url(publicKey);
 }
 
-/** Decode a base64url ML-DSA-87 public key. */
-export function decodePublicKey(value: string): Uint8Array {
+/** Decode a base64url ML-DSA public key. */
+export function decodePublicKey(
+  value: string,
+  pqcCategory: PqcCategory = DEFAULT_PQC_CATEGORY,
+): Uint8Array {
+  const expected = sigConstantsForCategory(pqcCategory).PUBLIC_KEY_BYTES;
   const bytes = base64UrlToBytes(value);
-  if (bytes.length !== SIG.PUBLIC_KEY_BYTES) {
+  if (bytes.length !== expected) {
     throw new Error(
-      `public key must be ${SIG.PUBLIC_KEY_BYTES} bytes, got ${bytes.length}`,
+      `public key must be ${expected} bytes, got ${bytes.length}`,
     );
   }
   return bytes;

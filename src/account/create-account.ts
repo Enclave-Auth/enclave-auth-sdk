@@ -28,11 +28,16 @@ import {
   type WrappedIdentityKey,
 } from "./types.js";
 
+import type { PqcCategory } from "../pqc-category.js";
+import { DEFAULT_PQC_CATEGORY } from "../pqc-category.js";
+
 /** Optional hooks (tests inject mock HIBP fetch; optional PIN at signup). */
 export type CreateAccountOptions = {
   passwordPolicy?: BreachCheckOptions;
   /** Optional recovery PIN (alphanumeric secondary credential). */
   pin?: string;
+  /** ML-DSA parameter category — must match the Application (default cat5). */
+  pqcCategory?: PqcCategory;
 };
 
 export type CreateAccountResult = {
@@ -77,7 +82,8 @@ export async function createAccount(
   }
 
   const amk = generateAmk();
-  const identity = await generateIdentityKeyPair();
+  const pqcCategory = options.pqcCategory ?? DEFAULT_PQC_CATEGORY;
+  const identity = await generateIdentityKeyPair(pqcCategory);
 
   // wrapAmk(plaintext, wrappingKey): identity seed under the AMK.
   const identityParts = wrapAmk(identity.secretKeySeed, amk);

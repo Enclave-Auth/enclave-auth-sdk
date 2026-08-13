@@ -10,6 +10,13 @@
 export { initCrypto } from "./init.js";
 
 export {
+  DEFAULT_PQC_CATEGORY,
+  parsePqcCategory,
+  sigConstantsForCategory,
+  type PqcCategory,
+} from "./pqc-category.js";
+
+export {
   decodePublicKey,
   encodePublicKey,
   generateIdentityKeyPair,

@@ -4,19 +4,21 @@
  * Client signs with the account `secretKeySeed` (recovered after AMK unlock);
  * server verifies with the registered account public key only. Serialization
  * is canonical JSON with fixed key order.
- *
- * Primitives accept the 32-byte seed form for `sigSignWithContext` — seeds are
- * passed through without expansion. This module does not care how the seed was
- * obtained (AMK unlock vs. service key).
  */
 
 import {
-  SIG,
+  sig65SignWithContext,
+  sig65VerifyWithContext,
   sigSignWithContext,
   sigVerifyWithContext,
 } from "@enclave-technologies/pqc-primitives";
 
 import { base64UrlToBytes, bytesToBase64Url, utf8Encode } from "./encoding.js";
+import {
+  DEFAULT_PQC_CATEGORY,
+  sigConstantsForCategory,
+  type PqcCategory,
+} from "./pqc-category.js";
 
 /** Fixed domain-separation context for login challenges. */
 export const LOGIN_CHALLENGE_CONTEXT = "enclave-auth:login:v1" as const;
@@ -36,7 +38,6 @@ export type Challenge = {
  */
 export function serializeChallenge(challenge: Challenge): Uint8Array {
   validateChallenge(challenge);
-  // Fixed key order: context, issuedAt, nonce (alphabetical).
   const json =
     `{"context":${jsonString(challenge.context)},` +
     `"issuedAt":${challenge.issuedAt},` +
@@ -58,18 +59,23 @@ function validateChallenge(challenge: Challenge): void {
   if (!challenge.context) {
     throw new Error("challenge.context must not be empty");
   }
+  const sig = sigConstantsForCategory(DEFAULT_PQC_CATEGORY);
   const contextBytes = utf8Encode(challenge.context);
-  if (contextBytes.length > SIG.MAX_CONTEXT_BYTES) {
+  if (contextBytes.length > sig.MAX_CONTEXT_BYTES) {
     throw new Error(
-      `challenge.context must be ≤ ${SIG.MAX_CONTEXT_BYTES} bytes UTF-8`,
+      `challenge.context must be ≤ ${sig.MAX_CONTEXT_BYTES} bytes UTF-8`,
     );
   }
 }
 
-function assertSeed(secretKeySeed: Uint8Array): void {
-  if (secretKeySeed.length !== SIG.SECRET_KEY_SEED_BYTES) {
+function assertSeed(
+  secretKeySeed: Uint8Array,
+  pqcCategory: PqcCategory,
+): void {
+  const expected = sigConstantsForCategory(pqcCategory).SECRET_KEY_SEED_BYTES;
+  if (secretKeySeed.length !== expected) {
     throw new Error(
-      `secretKeySeed must be ${SIG.SECRET_KEY_SEED_BYTES} bytes, got ${secretKeySeed.length}`,
+      `secretKeySeed must be ${expected} bytes, got ${secretKeySeed.length}`,
     );
   }
 }
@@ -82,12 +88,14 @@ function assertSeed(secretKeySeed: Uint8Array): void {
 export async function signChallenge(
   secretKeySeed: Uint8Array,
   challenge: Challenge,
+  pqcCategory: PqcCategory = DEFAULT_PQC_CATEGORY,
 ): Promise<string> {
-  assertSeed(secretKeySeed);
+  assertSeed(secretKeySeed, pqcCategory);
   const message = serializeChallenge(challenge);
   const context = utf8Encode(challenge.context);
-  // Seed form is accepted by sigSignWithContext (32 B).
-  const signature = sigSignWithContext(secretKeySeed, message, context);
+  const signature = pqcCategory === "cat3"
+    ? sig65SignWithContext(secretKeySeed, message, context)
+    : sigSignWithContext(secretKeySeed, message, context);
   return bytesToBase64Url(signature);
 }
 
@@ -98,19 +106,23 @@ export async function verifyChallenge(
   publicKey: Uint8Array,
   challenge: Challenge,
   signatureB64: string,
+  pqcCategory: PqcCategory = DEFAULT_PQC_CATEGORY,
 ): Promise<boolean> {
-  if (publicKey.length !== SIG.PUBLIC_KEY_BYTES) {
+  const sig = sigConstantsForCategory(pqcCategory);
+  if (publicKey.length !== sig.PUBLIC_KEY_BYTES) {
     throw new Error(
-      `publicKey must be ${SIG.PUBLIC_KEY_BYTES} bytes, got ${publicKey.length}`,
+      `publicKey must be ${sig.PUBLIC_KEY_BYTES} bytes, got ${publicKey.length}`,
     );
   }
   const message = serializeChallenge(challenge);
   const context = utf8Encode(challenge.context);
   const signature = base64UrlToBytes(signatureB64);
-  if (signature.length !== SIG.SIGNATURE_BYTES) {
+  if (signature.length !== sig.SIGNATURE_BYTES) {
     throw new Error(
-      `signature must be ${SIG.SIGNATURE_BYTES} bytes, got ${signature.length}`,
+      `signature must be ${sig.SIGNATURE_BYTES} bytes, got ${signature.length}`,
     );
   }
-  return sigVerifyWithContext(publicKey, message, signature, context);
+  return pqcCategory === "cat3"
+    ? sig65VerifyWithContext(publicKey, message, signature, context)
+    : sigVerifyWithContext(publicKey, message, signature, context);
 }
