@@ -61,7 +61,10 @@ export type {
 
 export { base64UrlToBytes, bytesToBase64Url } from "./encoding.js";
 
-export { fetchAuthServicePublicKey } from "./session-verify.js";
+export {
+  fetchAuthServicePublicKey,
+  type FetchAuthServicePublicKeyOptions,
+} from "./session-verify.js";
 
 export {
   AMK_BYTES,

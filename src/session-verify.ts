@@ -24,6 +24,14 @@ export {
 
 import { decodePublicKey } from "./identity.js";
 
+export type FetchAuthServicePublicKeyOptions = {
+  /**
+   * Extra headers. The Auth well-known handler requires
+   * `X-Enclave-Publishable-Key` so product APIs can fetch the signing key.
+   */
+  headers?: Record<string, string>;
+};
+
 /**
  * Fetch the current Auth service public key from the well-known endpoint.
  *
@@ -32,9 +40,13 @@ import { decodePublicKey } from "./identity.js";
  */
 export async function fetchAuthServicePublicKey(
   wellKnownUrl: string,
+  options?: FetchAuthServicePublicKeyOptions,
 ): Promise<{ publicKey: Uint8Array; keyId: string }> {
   const res = await fetch(wellKnownUrl, {
-    headers: { Accept: "application/json" },
+    headers: {
+      Accept: "application/json",
+      ...options?.headers,
+    },
   });
   if (!res.ok) {
     throw new Error(`failed to fetch auth well-known: HTTP ${res.status}`);

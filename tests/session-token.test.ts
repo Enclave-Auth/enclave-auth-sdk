@@ -65,3 +65,37 @@ describe("session token mint/verify", () => {
     ).rejects.toBeInstanceOf(InvalidSignatureError);
   });
 });
+
+describe("fetchAuthServicePublicKey", () => {
+  it("forwards extra headers for well-known publishable-key auth", async () => {
+    const { encodePublicKey, fetchAuthServicePublicKey, generateIdentityKeyPair, initCrypto } =
+      await import("../src/index.js");
+    await initCrypto();
+    const service = await generateIdentityKeyPair();
+    const publicKey = encodePublicKey(service.publicKey);
+    const seen: Record<string, string> = {};
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = async (_input, init) => {
+      const headers = new Headers(init?.headers);
+      headers.forEach((value, key) => {
+        seen[key.toLowerCase()] = value;
+      });
+      return new Response(
+        JSON.stringify({ publicKey, keyId: "auth-v1" }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
+      );
+    };
+    try {
+      const result = await fetchAuthServicePublicKey(
+        "https://auth.example/.well-known/enclave-auth",
+        { headers: { "X-Enclave-Publishable-Key": "pk_dev_test" } },
+      );
+      expect(seen.accept).toBe("application/json");
+      expect(seen["x-enclave-publishable-key"]).toBe("pk_dev_test");
+      expect(result.keyId).toBe("auth-v1");
+      expect(result.publicKey).toEqual(service.publicKey);
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+});
